@@ -1,0 +1,15 @@
+{
+    "name": "Go Web App Intermediate",
+    "dockerComposeFile": [
+        "../docker-compose.yml"
+    ],
+    "service": "go",
+    "workspaceFolder": "/go/src/app",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "golang.go"
+            ]
+        }
+    }
+}

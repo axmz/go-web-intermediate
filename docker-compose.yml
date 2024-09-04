@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  go:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: go
+    volumes:
+      - ./:/go/src/app
+    ports:
+      - "4000:4000"
+      - "4001:4001"
+      - "5000:5000"
+    working_dir: /go/src/app
+
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: testdb
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+  dbeaver:
+    image: dbeaver/cloudbeaver:latest
+    container_name: dbeaver
+    # TODO: it must be possible to create a connection with data-souces.json instead of manually
+    environment:
+      - CB_DB_URL=jdbc:mariadb://mariadb:3306/testdb
+      - CB_DB_USERNAME=root
+      - CB_DB_PASSWORD=root
+    ports:
+      - "8978:8978"
+    volumes: 
+      - cloudbeaver:/opt/cloudbeaver/workspace  
+      - ./data-sources.json:/opt/cloudbeaver/conf/data-sources.json
+    depends_on:
+      - mariadb
+
+volumes:
+  mariadb_data:
+  cloudbeaver:
